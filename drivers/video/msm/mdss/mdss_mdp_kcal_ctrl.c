@@ -210,22 +210,21 @@ static void mdss_mdp_pp_kcal_invert(struct kcal_lut_data *lut_data)
 
 
 
-#define DEF_PCC 0x100
-
+#define NUM_QLUT 0x100
 #define DEF_PA 0xff
 #define PCC_ADJ 0x80
 
 struct kcal_lut_data {
-	int red;
-	int green;
-	int blue;
-	int minimum;
-	int enable;
-	int invert;
-	int sat;
-	int hue;
-	int val;
-	int cont;
+    int red;
+    int green;
+    int blue;
+    int minimum;
+    int enable;
+    int invert;
+    int sat;
+    int hue;
+    int val;
+    int cont;
 };
 
 static uint32_t igc_Table_Inverted[IGC_LUT_ENTRIES] = {
@@ -320,61 +319,64 @@ static uint32_t igc_Table_RGB[IGC_LUT_ENTRIES] = {
 	48, 32, 16, 0
 };
 
-struct mdss_mdp_ctl *fb0_ctl = 0;
-
-static int mdss_mdp_kcal_store_fb0_ctl(void)
+static void mdss_mdp_pp_kcal_update(struct kcal_lut_data *lut_data)
 {
-	int i;
-	struct mdss_mdp_ctl *ctl;
-	struct mdss_data_type *mdata = mdss_mdp_get_mdata();
+	u32 copyback = 0;
+	struct mdp_pcc_cfg_data pcc_config;
 
-	if (fb0_ctl) return 1;
-	if (!mdata) {
-		pr_err("%s mdata is NULL...",__func__);
-		return 0;
-	}
+	memset(&pcc_config, 0, sizeof(struct mdp_pcc_cfg_data));
 
-	for (i = 0; i < mdata->nctl; i++) {
-		ctl = mdata->ctl_off + i;
-		if (!ctl) {
-			pr_err("%s ctl is NULL...\n",__func__);
-			return 0;
-		}
-		if (!(ctl->mfd)) {
-			pr_err("%s MFD is NULL...\n",__func__);
-			return 0;
-		}
-		pr_err("%s panel name %s\n",__func__,ctl->mfd->panel_info->panel_name);
-		if ( ctl->mfd->panel_info->fb_num  == 0 ) {
-			pr_err("%s panel found...\n",__func__);
-			fb0_ctl = ctl;
-			return 1;
-		}
-	}
-	return 0;
+	pcc_config.block = MDP_LOGICAL_BLOCK_DISP_0;
+	pcc_config.ops = lut_data->enable ? MDP_PP_OPS_WRITE | MDP_PP_OPS_ENABLE :
+		MDP_PP_OPS_WRITE | MDP_PP_OPS_DISABLE;
+	pcc_config.r.r = lut_data->red * PCC_ADJ;
+	pcc_config.g.g = lut_data->green * PCC_ADJ;
+	pcc_config.b.b = lut_data->blue * PCC_ADJ;
+
+	mdss_mdp_pcc_config(&pcc_config, &copyback);
 }
 
-static int mdss_mdp_kcal_display_commit(void)
+static void mdss_mdp_pp_kcal_pa(struct kcal_lut_data *lut_data)
 {
-	int i;
-	int ret = 0;
-	struct mdss_mdp_ctl *ctl;
+	u32 copyback = 0;
+	struct mdp_pa_cfg_data pa_config;
+	struct mdp_pa_v2_cfg_data pa_v2_config;
 	struct mdss_data_type *mdata = mdss_mdp_get_mdata();
 
-	for (i = 0; i < mdata->nctl; i++) {
-		ctl = mdata->ctl_off + i;
-		/* pp setup requires mfd */
-		if ((mdss_mdp_ctl_is_power_on(ctl)) && (ctl->mfd)) {
-			ret = mdss_mdp_pp_setup(ctl);
-			if (ret)
-				pr_err("%s: setup failed: %d\n", __func__, ret);
-		}
-	}
+	if (mdata->mdp_rev < MDSS_MDP_HW_REV_103) {
+		memset(&pa_config, 0, sizeof(struct mdp_pa_cfg_data));
 
-	return ret;
+		pa_config.block = MDP_LOGICAL_BLOCK_DISP_0;
+		pa_config.pa_data.flags = MDP_PP_OPS_WRITE | MDP_PP_OPS_ENABLE;
+		pa_config.pa_data.hue_adj = lut_data->hue;
+		pa_config.pa_data.sat_adj = lut_data->sat;
+		pa_config.pa_data.val_adj = lut_data->val;
+		pa_config.pa_data.cont_adj = lut_data->cont;
+
+		mdss_mdp_pa_config(&pa_config, &copyback);
+	} else {
+		memset(&pa_v2_config, 0, sizeof(struct mdp_pa_v2_cfg_data));
+
+		pa_v2_config.block = MDP_LOGICAL_BLOCK_DISP_0;
+		pa_v2_config.pa_v2_data.flags = MDP_PP_OPS_WRITE | MDP_PP_OPS_ENABLE;
+		pa_v2_config.pa_v2_data.flags |= MDP_PP_PA_HUE_ENABLE;
+		pa_v2_config.pa_v2_data.flags |= MDP_PP_PA_HUE_MASK;
+		pa_v2_config.pa_v2_data.flags |= MDP_PP_PA_SAT_ENABLE;
+		pa_v2_config.pa_v2_data.flags |= MDP_PP_PA_SAT_MASK;
+		pa_v2_config.pa_v2_data.flags |= MDP_PP_PA_VAL_ENABLE;
+		pa_v2_config.pa_v2_data.flags |= MDP_PP_PA_VAL_MASK;
+		pa_v2_config.pa_v2_data.flags |= MDP_PP_PA_CONT_ENABLE;
+		pa_v2_config.pa_v2_data.flags |= MDP_PP_PA_CONT_MASK;
+		pa_v2_config.pa_v2_data.global_hue_adj = lut_data->hue;
+		pa_v2_config.pa_v2_data.global_sat_adj = lut_data->sat;
+		pa_v2_config.pa_v2_data.global_val_adj = lut_data->val;
+		pa_v2_config.pa_v2_data.global_cont_adj = lut_data->cont;
+
+		mdss_mdp_pa_v2_config(&pa_v2_config, &copyback);
+	}
 }
 
-static void mdss_mdp_kcal_update_pcc(struct kcal_lut_data *lut_data)
+static void mdss_mdp_pp_kcal_invert(struct kcal_lut_data *lut_data)
 {
 
 	lut_data->red = (lut_data->red < lut_data->minimum) ?
