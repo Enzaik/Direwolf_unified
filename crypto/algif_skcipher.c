@@ -448,7 +448,10 @@ static int skcipher_recvmsg(struct kiocb *unused, struct socket *sock,
 		char __user *from = iov->iov_base;
 
 		while (seglen) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 36c84b22ac8a... crypto: algif_skcipher - Load TX SG list after waiting
 			used = ctx->used;
 			if (!used) {
 				err = skcipher_wait_for_data(sk, flags);
@@ -471,6 +474,13 @@ static int skcipher_recvmsg(struct kiocb *unused, struct socket *sock,
 				goto free;
 			sgl = list_first_entry(&ctx->tsgl,
 						struct skcipher_sg_list, list);
+			sg = sgl->sg;
+
+			while (!sg->length)
+				sg++;
+
+			sgl = list_first_entry(&ctx->tsgl,
+					       struct skcipher_sg_list, list);
 			sg = sgl->sg;
 
 			while (!sg->length)
