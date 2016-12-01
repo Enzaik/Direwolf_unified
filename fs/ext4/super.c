@@ -3967,7 +3967,11 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
 	db_count = (sbi->s_groups_count + EXT4_DESC_PER_BLOCK(sb) - 1) /
 		   EXT4_DESC_PER_BLOCK(sb);
 	if (EXT4_HAS_INCOMPAT_FEATURE(sb, EXT4_FEATURE_INCOMPAT_META_BG)) {
+<<<<<<< HEAD
 		if (le32_to_cpu(es->s_first_meta_bg) > db_count) {
+=======
+		if (le32_to_cpu(es->s_first_meta_bg) >= db_count) {
+>>>>>>> 2ce649fdacd5... ext4: validate s_first_meta_bg at mount time
 			ext4_msg(sb, KERN_WARNING,
 				 "first meta block group too large: %u "
 				 "(group descriptor block count %u)",
