@@ -530,6 +530,9 @@ extern struct cpufreq_governor cpufreq_gov_bioshock;
 extern struct cpufreq_governor cpufreq_gov_lionheart;
 #define CPUFREQ_DEFAULT_GOVERNOR 	(&cpufreq_gov_LIONHEART)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 542aea5038e1... add Lionfish gov
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ZZMOOVE)
 extern struct cpufreq_governor cpufreq_gov_zzmoove;
 #define CPUFREQ_DEFAULT_GOVERNOR       (&cpufreq_gov_zzmoove)
@@ -537,9 +540,12 @@ extern struct cpufreq_governor cpufreq_gov_zzmoove;
 extern struct cpufreq_governor cpufreq_gov_lionfish;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lionfish)
 >>>>>>> e642933861fb... add Lionfish gov
+<<<<<<< HEAD
 =======
 >>>>>>> 428103110df0... add Lionheart gov
 >>>>>>> afa80feff02... add Lionheart gov
+=======
+>>>>>>> 542aea5038e1... add Lionfish gov
 #endif
 
 /*********************************************************************
