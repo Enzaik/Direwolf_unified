@@ -44,8 +44,12 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
 		struct msm_gpu *gpu, uint32_t nr)
 {
 	struct msm_gem_submit *submit;
+<<<<<<< HEAD
 	uint64_t sz = sizeof(*submit) + (nr * sizeof(submit->bos[0]));
 >>>>>>> f449835963f4... drm/msm: Fix potential buffer overflow issue
+=======
+	uint64_t sz = sizeof(*submit) + ((u64)nr * sizeof(submit->bos[0]));
+>>>>>>> 77336ca65ccf... drm/msm: fix an integer overflow test
 
 	if (sz > SIZE_MAX)
 		return NULL;
