@@ -1433,6 +1433,7 @@ static int fanout_add(struct sock *sk, u16 id, u16 type_flags)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	mutex_lock(&fanout_mutex);
 
 	err = -EINVAL;
@@ -1440,6 +1441,8 @@ static int fanout_add(struct sock *sk, u16 id, u16 type_flags)
 		goto out;
 
 	err = -EALREADY;
+=======
+>>>>>>> e4ffdf9ead59... packet: hold bind lock when rebinding to fanout hook
 	if (po->fanout)
 		goto out;
 
@@ -1475,7 +1478,10 @@ static int fanout_add(struct sock *sk, u16 id, u16 type_flags)
 		list_add(&match->list, &fanout_list);
 	}
 	err = -EINVAL;
-	if (match->type == type &&
+
+	spin_lock(&po->bind_lock);
+	if (po->running &&
+	    match->type == type &&
 	    match->prot_hook.type == po->prot_hook.type &&
 	    match->prot_hook.dev == po->prot_hook.dev) {
 		err = -ENOSPC;
@@ -1487,6 +1493,13 @@ static int fanout_add(struct sock *sk, u16 id, u16 type_flags)
 			err = 0;
 		}
 	}
+	spin_unlock(&po->bind_lock);
+
+	if (err && !atomic_read(&match->sk_ref)) {
+		list_del(&match->list);
+		kfree(match);
+	}
+
 out:
 	mutex_unlock(&fanout_mutex);
 	return err;
