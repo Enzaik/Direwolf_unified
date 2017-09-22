@@ -222,6 +222,7 @@ static int snd_usb_create_streams(struct snd_usb_audio *chip, int ctrlif)
 	void *control_header;
 	int i, protocol;
 	int rest_bytes;
+<<<<<<< HEAD
 
 	usb_iface = usb_ifnum_to_if(dev, ctrlif);
 	if (!usb_iface) {
@@ -229,6 +230,8 @@ static int snd_usb_create_streams(struct snd_usb_audio *chip, int ctrlif)
 					dev->devnum, ctrlif);
 		return -EINVAL;
 	}
+=======
+>>>>>>> ee44ff5445ae... ALSA: usb-audio: Check out-of-bounds access by corrupted buffer descriptor
 
 	/* find audiocontrol interface */
 	host_iface = &usb_iface->altsetting[0];
