@@ -3606,6 +3606,15 @@ static void ffs_closed(struct ffs_data *ffs)
 	    || !atomic_read(&opts->func_inst.group.cg_item.ci_kref.refcount))
 		goto done;
 
+<<<<<<< HEAD
+=======
+	ci = opts->func_inst.group.cg_item.ci_parent->ci_parent;
+	ffs_dev_unlock();
+
+	if (test_bit(FFS_FL_BOUND, &ffs->flags))
+		unregister_gadget_item(ci);
+	return;
+>>>>>>> 512b79f1410f... usb: f_fs: Prevent gadget unbind if it is already unbound
 done:
 	ffs_dev_unlock();
 }
