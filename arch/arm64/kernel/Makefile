@@ -34,6 +34,8 @@ arm64-obj-$(CONFIG_HW_PERF_EVENTS)	+= perf_event.o perf_debug.o 		\
 arm64-obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
 arm64-obj-$(CONFIG_ARM64_CPU_SUSPEND)	+= sleep.o suspend.o
 arm64-obj-$(CONFIG_CPU_IDLE)		+= cpuidle.o
+arm64-obj-$(CONFIG_ASMP)		+= autosmp.o
+arm64-obj-$(CONFIG_AIO_HOTPLUG)		+= AiO_HotPlug.o
 arm64-obj-$(CONFIG_JUMP_LABEL)		+= jump_label.o
 arm64-obj-$(CONFIG_KGDB)		+= kgdb.o
 arm64-obj-$(CONFIG_EFI)			+= efi.o efi-stub.o efi-entry.o
@@ -50,3 +52,5 @@ obj-y					+= $(arm64-obj-y) vdso/
 obj-m					+= $(arm64-obj-m)
 head-y					:= head.o
 extra-y					:= $(head-y) vmlinux.lds
+obj-y					+= msm_hotplug.o
+
