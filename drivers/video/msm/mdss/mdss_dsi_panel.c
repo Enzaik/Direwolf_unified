@@ -23,12 +23,10 @@
 #include <linux/qpnp/pwm.h>
 #include <linux/err.h>
 #include <linux/string.h>
-<<<<<<< HEAD
 
-=======
 #include <linux/hardware_info.h>
 #include <linux/display_state.h>
->>>>>>> dce321c1d409... Add a simple API to check display state (on/off)
+
 #include "mdss_dsi.h"
 #ifdef TARGET_HW_MDSS_HDMI
 #include "mdss_dba_utils.h"
