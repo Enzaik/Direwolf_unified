@@ -2201,11 +2201,7 @@ static int parse_audio_unit(struct mixer_build *state, int unitid)
 static void snd_usb_mixer_free(struct usb_mixer_interface *mixer)
 {
 	/* kill pending URBs */
-<<<<<<< HEAD
-	snd_usb_mixer_disconnect(mixer);
-=======
 	snd_usb_mixer_disconnect(&mixer->list);
->>>>>>> 9d263dba2528... ALSA: usb-audio: Kill stray URB at exiting
 
 	kfree(mixer->id_elems);
 	if (mixer->urb) {
@@ -2538,14 +2534,11 @@ _error:
 	return err;
 }
 
-void snd_usb_mixer_disconnect(struct usb_mixer_interface *mixer)
+void snd_usb_mixer_disconnect(struct list_head *p)
 {
-<<<<<<< HEAD
-=======
 	struct usb_mixer_interface *mixer;
 
 	mixer = list_entry(p, struct usb_mixer_interface, list);
->>>>>>> 9d263dba2528... ALSA: usb-audio: Kill stray URB at exiting
 	if (mixer->disconnected)
 		return;
 	if (mixer->urb)

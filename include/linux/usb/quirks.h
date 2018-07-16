@@ -50,8 +50,7 @@
 /* device can't handle Link Power Management */
 #define USB_QUIRK_NO_LPM			BIT(10)
 
-<<<<<<< HEAD
-=======
+
 /*
  * Device reports its bInterval as linear frames instead of the
  * USB 2.0 calculation.
@@ -61,5 +60,5 @@
 /* Device needs a pause after every control message. */
 #define USB_QUIRK_DELAY_CTRL_MSG		BIT(13)
 
->>>>>>> 5ad9d27c1244... usb: quirks: add control message delay for 1b1c:1b20
+
 #endif /* __LINUX_USB_QUIRKS_H */

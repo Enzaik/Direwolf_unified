@@ -2327,11 +2327,11 @@ static const struct nla_policy rtm_ipv6_policy[RTA_MAX+1] = {
 	[RTA_PRIORITY]          = { .type = NLA_U32 },
 	[RTA_METRICS]           = { .type = NLA_NESTED },
 	[RTA_MULTIPATH]		= { .len = sizeof(struct rtnexthop) },
-<<<<<<< HEAD
+
 	[RTA_UID]		= { .type = NLA_U32 },
-=======
+
 	[RTA_TABLE]		= { .type = NLA_U32 },
->>>>>>> f4dd54821e63... ipv6: add RTA_TABLE and RTA_PREFSRC to rtm_ipv6_policy
+
 };
 
 static int rtm_to_fib6_config(struct sk_buff *skb, struct nlmsghdr *nlh,

@@ -2884,13 +2884,10 @@ static int _ffs_func_bind(struct usb_configuration *c,
 	struct ffs_data *ffs = func->ffs;
 
 	const int full = !!func->ffs->fs_descs_count;
-<<<<<<< HEAD
-	const int high = func->ffs->hs_descs_count;
-	const int super = func->ffs->ss_descs_count;
-=======
+
 	const int high = !!func->ffs->hs_descs_count;
 	const int super = !!func->ffs->ss_descs_count;
->>>>>>> 5873f621b200... usb: gadget: f_fs: Process all descriptors during bind
+
 
 	int fs_len, hs_len, ss_len, ret, i;
 
@@ -3611,15 +3608,7 @@ static void ffs_closed(struct ffs_data *ffs)
 	    || !atomic_read(&opts->func_inst.group.cg_item.ci_kref.refcount))
 		goto done;
 
-<<<<<<< HEAD
-=======
-	ci = opts->func_inst.group.cg_item.ci_parent->ci_parent;
-	ffs_dev_unlock();
 
-	if (test_bit(FFS_FL_BOUND, &ffs->flags))
-		unregister_gadget_item(ci);
-	return;
->>>>>>> 512b79f1410f... usb: f_fs: Prevent gadget unbind if it is already unbound
 done:
 	ffs_dev_unlock();
 }

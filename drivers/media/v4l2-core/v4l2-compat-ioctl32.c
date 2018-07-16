@@ -384,21 +384,14 @@ static int get_v4l2_plane32(struct v4l2_plane __user *up,
 	compat_ulong_t p;
 
 	if (copy_in_user(up, up32, 2 * sizeof(__u32)) ||
-<<<<<<< HEAD
-		copy_in_user(&up->data_offset, &up32->data_offset,
-				sizeof(__u32)) ||
-		copy_in_user(up->reserved, up32->reserved,
-				sizeof(up->reserved)) ||
-		copy_in_user(&up->length, &up32->length,
-				sizeof(__u32)))
-=======
+
 	    copy_in_user(&up->data_offset, &up32->data_offset,
-<<<<<<< HEAD
-			 sizeof(__u32)))
->>>>>>> 6438cbe87cb0... media: v4l2-compat-ioctl32.c: fix the indentation
-=======
-			 sizeof(up->data_offset)))
->>>>>>> ac35609a8c96... media: v4l2-compat-ioctl32.c: avoid sizeof(type)
+        sizeof(up->data_offset)) ||
+        copy_in_user(up->reserved, up32->reserved,
+        sizeof(up->reserved)) ||
+        copy_in_user(&up->length, &up32->length,
+        sizeof(up->length)))
+        
 		return -EFAULT;
 
 	switch (memory) {
@@ -429,19 +422,12 @@ static int put_v4l2_plane32(struct v4l2_plane __user *up,
 	unsigned long p;
 
 	if (copy_in_user(up32, up, 2 * sizeof(__u32)) ||
-<<<<<<< HEAD
-		copy_in_user(up32->reserved, up->reserved,
-				sizeof(up32->reserved)) ||
-		copy_in_user(&up32->data_offset, &up->data_offset,
-				sizeof(__u32)))
-=======
+        copy_in_user(up32->reserved, up->reserved,
+                     sizeof(up->reserved)) ||
 	    copy_in_user(&up32->data_offset, &up->data_offset,
-<<<<<<< HEAD
-			 sizeof(__u32)))
->>>>>>> 6438cbe87cb0... media: v4l2-compat-ioctl32.c: fix the indentation
-=======
+
 			 sizeof(up->data_offset)))
->>>>>>> ac35609a8c96... media: v4l2-compat-ioctl32.c: avoid sizeof(type)
+
 		return -EFAULT;
 
 	switch (memory) {
@@ -460,15 +446,10 @@ static int put_v4l2_plane32(struct v4l2_plane __user *up,
 	case V4L2_MEMORY_DMABUF:
 		if (copy_in_user(&up32->m.fd, &up->m.fd, sizeof(up->m.fd)))
 			return -EFAULT;
-<<<<<<< HEAD
-	if (memory == V4L2_MEMORY_USERPTR)
-		if (copy_in_user(&up32->m.userptr, &up->m.userptr,
-					sizeof(compat_long_t)))
-			return -EFAULT;
-=======
+
 		break;
 	}
->>>>>>> 2a13e9ce92c3... media: v4l2-compat-ioctl32.c: copy m.userptr in put_v4l2_plane32
+
 
 	return 0;
 }
@@ -887,7 +868,7 @@ static int put_v4l2_ext_controls32(struct file *file,
 	    get_user(kcontrols, &kp->controls))
 		return -EFAULT;
 
-	if (!count)
+	if (!count || count > (U32_MAX/sizeof(*ucontrols)))
 		return 0;
 	if (get_user(p, &up->controls))
 		return -EFAULT;
@@ -1042,7 +1023,7 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 	int compatible_arg = 1;
 	long err = 0;
 
-	memset(&karg, 0, sizeof(karg));
+	
 	/* First, convert the command. */
 	switch (cmd) {
 	case VIDIOC_G_FMT32: cmd = VIDIOC_G_FMT; break;

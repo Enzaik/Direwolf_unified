@@ -293,7 +293,7 @@ ecryptfs_create(struct inode *directory_inode, struct dentry *ecryptfs_dentry,
 		iput(ecryptfs_inode);
 		goto out;
 	}
-<<<<<<< HEAD
+
 	unlock_new_inode(ecryptfs_inode);
 
 	crypt_stat = &ecryptfs_inode_to_private(ecryptfs_inode)->crypt_stat;
@@ -303,9 +303,9 @@ ecryptfs_create(struct inode *directory_inode, struct dentry *ecryptfs_dentry,
 					crypt_stat);
 
 	d_instantiate(ecryptfs_dentry, ecryptfs_inode);
-=======
+
 	d_instantiate_new(ecryptfs_dentry, ecryptfs_inode);
->>>>>>> b90b64116b11... do d_instantiate/unlock_new_inode combinations safely
+
 out:
 	return rc;
 }
