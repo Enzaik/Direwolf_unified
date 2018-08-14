@@ -1154,7 +1154,6 @@ config TOUCHSCREEN_FT5336
 	bool "FOCALTECH touchpanel FT5336 series"
 	depends on I2C
 
-<<<<<<< HEAD
 source "drivers/input/touchscreen/ft5336/Kconfig"
 
 config TOUCHSCREEN_FT5346
@@ -1168,9 +1167,6 @@ config TOUCHSCREEN_GT917D
 	depends on I2C
 
 source "drivers/input/touchscreen/GT917D/Kconfig"
-=======
-          If unsure, say N.
->>>>>>> c695c39404782aa2c7a36ef70ef6dc5db615f0a7
 
 config TOUCHSCREEN_LOCKDOWN_INFO
 	bool "lockdown info"
